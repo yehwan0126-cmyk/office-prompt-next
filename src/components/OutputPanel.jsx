@@ -7,6 +7,8 @@ import styles from "./PromptGenerator.module.css"
 export default function OutputPanel({ spaceType, spaceScale, furniture, accentStyle, floor, ceiling, wall, partition, ctIdx }) {
   const [finalPrompt, setFinalPrompt] = useState("")
   const [copied, setCopied]           = useState(false)
+  const [loading, setLoading]         = useState(false)
+  const [error, setError]             = useState("")
 
   const buildJSON = () => {
     const ct   = COLOR_TEMP_STEPS[ctIdx]
@@ -39,16 +41,27 @@ export default function OutputPanel({ spaceType, spaceScale, furniture, accentSt
     }
   }
 
-  const generatePrompt = () => {
-    const json = buildJSON()
-    const inp  = json.input
-    setFinalPrompt(
-      `Photorealistic architectural visualization of a ${inp.space.scale} ${inp.space.type} interior. ` +
-      `Style: ${inp.style.base_style} with ${inp.style.accent_style} accents. ` +
-      `Materials: ${inp.materials.floor} floor, ${inp.materials.ceiling} ceiling, ${inp.materials.wall} walls, ${inp.materials.partition} partitions. ` +
-      `Lighting: ${inp.lighting.description}. Furniture: ${inp.furniture_configuration}. ` +
-      `Eye-level perspective, wide 24-28mm lens, no people, no text overlay, photorealistic render, minimal post-processing, strict geometry.`
-    )
+  const generatePrompt = async () => {
+    setLoading(true)
+    setError("")
+    setFinalPrompt("")
+
+    try {
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ promptData: buildJSON() }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) throw new Error(data.error || "오류가 발생했어요")
+      setFinalPrompt(data.prompt)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleCopy = (text) => {
@@ -76,10 +89,21 @@ export default function OutputPanel({ spaceType, spaceScale, furniture, accentSt
 
       {/* 텍스트 프롬프트 */}
       <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>✨ 텍스트 프롬프트</h2>
-        <button className={styles.btnPrimary} onClick={generatePrompt}>
-          🚀 프롬프트 생성
+        <h2 className={styles.sectionTitle}>✨ AI 텍스트 프롬프트</h2>
+        <button
+          className={styles.btnPrimary}
+          onClick={generatePrompt}
+          disabled={loading}
+        >
+          {loading ? "⏳ 생성 중..." : "🚀 AI 프롬프트 생성 (Gemini)"}
         </button>
+
+        {error && (
+          <p style={{ color: "#dc2626", fontSize: "13px", marginBottom: "12px" }}>
+            ⚠️ {error}
+          </p>
+        )}
+
         {finalPrompt && (
           <>
             <pre className={styles.pre}>{finalPrompt}</pre>
