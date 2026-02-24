@@ -88,3 +88,28 @@ export const SYSTEM_DEFAULTS = {
   quality: { render_fidelity:"photoreal", postprocess_style:"minimal" },
   camera: { viewpoint:"eye_level", lens:"wide_24_28mm" },
 }
+
+export const SYSTEM_DEFAULTS_STYLE_TRANSFER = {
+  constraints: { scale_reference:"human_scale", geometry_plausibility:"strict", verticals_straight:true, avoid_concepts:["people","watermark","text_overlay","extreme_fisheye"] },
+  quality: { render_fidelity:"photoreal", postprocess_style:"minimal" },
+  camera: { viewpoint:"eye_level", lens:"wide_24_28mm" },
+  style_transfer: {
+    preserve_structure: true,
+    structure_fidelity: "high",
+    style_override: "full",
+    reference_image_required: true,
+  },
+}
+
+export const TASK_OPTIONS = [
+  {
+    value: "photorealistic_architectural_visualization",
+    label: "🏛️ 건축 시각화",
+    desc: "사실적인 오피스 인테리어 렌더링 생성",
+  },
+  {
+    value: "image-style-transfer",
+    label: "🎨 이미지 스타일 전환",
+    desc: "참고 이미지의 구조를 유지하며 스타일 적용",
+  },
+]

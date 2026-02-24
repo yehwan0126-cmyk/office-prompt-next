@@ -3,7 +3,7 @@ export async function POST(request) {
     const { promptData } = await request.json()
 
     const systemPrompt = `You are an expert at writing image generation prompts for architectural visualization.
-Convert the given structured data into a single, detailed, natural English prompt for FLUX.1 Pro.
+Convert the given structured data into a single, detailed, natural English prompt for FLUX.2 Pro.
 The prompt should be vivid, specific, and optimized for photorealistic interior rendering.
 Return ONLY the prompt text, no explanations or extra text.`
 
