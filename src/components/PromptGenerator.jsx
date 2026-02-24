@@ -1,10 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import SpaceSection from "./SpaceSection"
 import MaterialsSection from "./MaterialsSection"
 import OutputPanel from "./OutputPanel"
+import HistorySidebar from "./HistorySidebar"
 import { SPACE_SCALE_BY_TYPE, FURNITURE_BY_TYPE, MATERIALS_BY_ACCENT } from "@/data/options"
+import { supabase } from "@/lib/supabase"
 import styles from "./PromptGenerator.module.css"
 
 export default function PromptGenerator() {
@@ -17,6 +19,23 @@ export default function PromptGenerator() {
   const [wall,        setWall]        = useState("")
   const [partition,   setPartition]   = useState("")
   const [ctIdx,       setCtIdx]       = useState(3)
+
+  const [history,     setHistory]     = useState([])
+  const [histLoading, setHistLoading] = useState(true)
+
+  // 히스토리 불러오기
+  useEffect(() => {
+    const fetchHistory = async () => {
+      const { data, error } = await supabase
+        .from("prompt_history")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(50)
+      if (!error) setHistory(data)
+      setHistLoading(false)
+    }
+    fetchHistory()
+  }, [])
 
   const handleSpaceType = (label) => {
     setSpaceType(label)
@@ -35,52 +54,90 @@ export default function PromptGenerator() {
     setPartition(Object.keys(mats.partition)[0])
   }
 
+  // OutputPanel에서 저장 완료 시 히스토리 목록에 추가
+  const handleSave = (newItem) => {
+    setHistory(prev => [newItem, ...prev])
+  }
+
+  // 히스토리 항목 클릭 시 옵션 복원
+  const handleSelect = (item) => {
+    const o = item.options
+    setSpaceType(o.spaceType)
+    setSpaceScale(o.spaceScale)
+    setFurniture(o.furniture)
+    setAccentStyle(o.accentStyle)
+    setFloor(o.floor)
+    setCeiling(o.ceiling)
+    setWall(o.wall)
+    setPartition(o.partition)
+    setCtIdx(o.ctIdx)
+  }
+
+  // 히스토리 삭제
+  const handleDelete = async (id) => {
+    const { error } = await supabase
+      .from("prompt_history")
+      .delete()
+      .eq("id", id)
+    if (!error) setHistory(prev => prev.filter(item => item.id !== id))
+  }
+
   const allReady = spaceType && accentStyle && floor && ceiling && wall && partition
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>🏢 Office Interior Prompt Generator</h1>
-      <p className={styles.subtitle}>FLUX.1 Pro 모델용 오피스 인테리어 이미지 생성 프롬프트 생성기</p>
-
-      <SpaceSection
-        spaceType={spaceType}
-        spaceScale={spaceScale}
-        furniture={furniture}
-        onSpaceType={handleSpaceType}
-        onSpaceScale={setSpaceScale}
-        onFurniture={setFurniture}
+    <div className={styles.pageLayout}>
+      <HistorySidebar
+        history={history}
+        loading={histLoading}
+        onSelect={handleSelect}
+        onDelete={handleDelete}
       />
 
-      {spaceType && (
-        <MaterialsSection
-          accentStyle={accentStyle}
-          floor={floor}
-          ceiling={ceiling}
-          wall={wall}
-          partition={partition}
-          ctIdx={ctIdx}
-          onAccentStyle={handleAccentStyle}
-          onFloor={setFloor}
-          onCeiling={setCeiling}
-          onWall={setWall}
-          onPartition={setPartition}
-          onCtIdx={setCtIdx}
-        />
-      )}
+      <div className={styles.container}>
+        <h1 className={styles.title}>🏢 Office Interior Prompt Generator</h1>
+        <p className={styles.subtitle}>FLUX.1 Pro 모델용 오피스 인테리어 이미지 생성 프롬프트 생성기</p>
 
-      {allReady && (
-        <OutputPanel
+        <SpaceSection
           spaceType={spaceType}
           spaceScale={spaceScale}
           furniture={furniture}
-          accentStyle={accentStyle}
-          floor={floor}
-          ceiling={ceiling}
-          wall={wall}
-          partition={partition}
-          ctIdx={ctIdx}
+          onSpaceType={handleSpaceType}
+          onSpaceScale={setSpaceScale}
+          onFurniture={setFurniture}
         />
-      )}
+
+        {spaceType && (
+          <MaterialsSection
+            accentStyle={accentStyle}
+            floor={floor}
+            ceiling={ceiling}
+            wall={wall}
+            partition={partition}
+            ctIdx={ctIdx}
+            onAccentStyle={handleAccentStyle}
+            onFloor={setFloor}
+            onCeiling={setCeiling}
+            onWall={setWall}
+            onPartition={setPartition}
+            onCtIdx={setCtIdx}
+          />
+        )}
+
+        {allReady && (
+          <OutputPanel
+            spaceType={spaceType}
+            spaceScale={spaceScale}
+            furniture={furniture}
+            accentStyle={accentStyle}
+            floor={floor}
+            ceiling={ceiling}
+            wall={wall}
+            partition={partition}
+            ctIdx={ctIdx}
+            onSave={handleSave}
+          />
+        )}
+      </div>
     </div>
   )
 }

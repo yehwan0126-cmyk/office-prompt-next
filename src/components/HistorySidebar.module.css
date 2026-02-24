@@ -1,0 +1,99 @@
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: #f8fafc;
+  border-right: 1px solid #e2e8f0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 20px 12px;
+  position: sticky;
+  top: 0;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 16px 0;
+}
+
+.empty {
+  font-size: 13px;
+  color: #94a3b8;
+  text-align: center;
+  margin-top: 24px;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.selectBtn {
+  flex: 1;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: background 0.15s;
+}
+
+.selectBtn:hover {
+  background: #f1f5f9;
+}
+
+.date {
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.preview {
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+  margin: 0;
+}
+
+.promptPreview {
+  font-size: 11px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.deleteBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px 8px;
+  font-size: 14px;
+  color: #94a3b8;
+  transition: color 0.15s;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+}
+
+.deleteBtn:hover {
+  color: #ef4444;
+  background: #fef2f2;
+}

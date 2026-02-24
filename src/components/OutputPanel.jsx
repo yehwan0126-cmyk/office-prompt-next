@@ -2,13 +2,15 @@
 
 import { useState } from "react"
 import { SPACE_TYPE, SPACE_SCALE_BY_TYPE, ACCENT_STYLE, MATERIALS_BY_ACCENT, FURNITURE_BY_TYPE, COLOR_TEMP_STEPS, SYSTEM_DEFAULTS } from "@/data/options"
+import { supabase } from "@/lib/supabase"
 import styles from "./PromptGenerator.module.css"
 
-export default function OutputPanel({ spaceType, spaceScale, furniture, accentStyle, floor, ceiling, wall, partition, ctIdx }) {
+export default function OutputPanel({ spaceType, spaceScale, furniture, accentStyle, floor, ceiling, wall, partition, ctIdx, onSave }) {
   const [finalPrompt, setFinalPrompt] = useState("")
   const [copied, setCopied]           = useState(false)
   const [loading, setLoading]         = useState(false)
   const [error, setError]             = useState("")
+  const [saved, setSaved]             = useState(false)
 
   const buildJSON = () => {
     const ct   = COLOR_TEMP_STEPS[ctIdx]
@@ -45,6 +47,7 @@ export default function OutputPanel({ spaceType, spaceScale, furniture, accentSt
     setLoading(true)
     setError("")
     setFinalPrompt("")
+    setSaved(false)
 
     try {
       const res = await fetch("/api/generate", {
@@ -56,7 +59,24 @@ export default function OutputPanel({ spaceType, spaceScale, furniture, accentSt
       const data = await res.json()
 
       if (!res.ok) throw new Error(data.error || "오류가 발생했어요")
+      
       setFinalPrompt(data.prompt)
+
+      // Supabase에 저장
+      const { data: saved, error: saveError } = await supabase
+        .from("prompt_history")
+        .insert([{
+          options: { spaceType, spaceScale, furniture, accentStyle, floor, ceiling, wall, partition, ctIdx },
+          prompt_en: data.prompt,
+        }])
+        .select()
+        .single()
+
+      if (!saveError) {
+        setSaved(true)
+        onSave?.(saved) // 부모(PromptGenerator)에게 새 항목 전달
+      }
+
     } catch (err) {
       setError(err.message)
     } finally {
@@ -107,12 +127,19 @@ export default function OutputPanel({ spaceType, spaceScale, furniture, accentSt
         {finalPrompt && (
           <>
             <pre className={styles.pre}>{finalPrompt}</pre>
-            <button
-              className={`${styles.btnCopy} ${copied ? styles.btnCopied : ""}`}
-              onClick={() => handleCopy(finalPrompt)}
-            >
-              {copied ? "✅ 복사 완료!" : "텍스트 복사"}
-            </button>
+            <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+              <button
+                className={`${styles.btnCopy} ${copied ? styles.btnCopied : ""}`}
+                onClick={() => handleCopy(finalPrompt)}
+              >
+                {copied ? "✅ 복사 완료!" : "텍스트 복사"}
+              </button>
+              {saved && (
+                <span style={{ fontSize: "13px", color: "#16a34a" }}>
+                  ✅ 히스토리에 저장됨
+                </span>
+              )}
+            </div>
           </>
         )}
       </div>
