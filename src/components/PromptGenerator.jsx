@@ -5,12 +5,13 @@ import SpaceSection from "./SpaceSection"
 import MaterialsSection from "./MaterialsSection"
 import OutputPanel from "./OutputPanel"
 import HistorySidebar from "./HistorySidebar"
-import { SPACE_SCALE_BY_TYPE, FURNITURE_BY_TYPE, MATERIALS_BY_ACCENT } from "@/data/options"
+import { SPACE_SCALE_BY_TYPE, FURNITURE_BY_TYPE, MATERIALS_BY_ACCENT, TASK_OPTIONS } from "@/data/options"
 import { supabase } from "@/lib/supabase"
 import styles from "./PromptGenerator.module.css"
 
 export default function PromptGenerator() {
   const [spaceType,   setSpaceType]   = useState(null)
+  const [selectedTask, setSelectedTask] = useState(TASK_OPTIONS[0].value)
   const [spaceScale,  setSpaceScale]  = useState("")
   const [furniture,   setFurniture]   = useState("")
   const [accentStyle, setAccentStyle] = useState(null)
@@ -97,6 +98,34 @@ export default function PromptGenerator() {
         <h1 className={styles.title}>🏢 Office Interior Prompt Generator</h1>
         <p className={styles.subtitle}>FLUX.1 Pro 모델용 오피스 인테리어 이미지 생성 프롬프트 생성기</p>
 
+        {/* Task 선택 */}
+        <div className={styles.section}>
+          <h2 className={styles.sectionTitle}>⚙️ 작업 방식 선택</h2>
+          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+            {TASK_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setSelectedTask(opt.value)}
+                style={{
+                  flex: 1,
+                  minWidth: "160px",
+                  padding: "12px 16px",
+                  borderRadius: "10px",
+                  border: selectedTask === opt.value ? "2px solid #a855f7" : "2px solid #3f3f46",
+                  background: selectedTask === opt.value ? "rgba(168,85,247,0.15)" : "rgba(255,255,255,0.03)",
+                  color: selectedTask === opt.value ? "#e9d5ff" : "#a1a1aa",
+                  cursor: "pointer",
+                  textAlign: "left",
+                  transition: "all 0.2s",
+                }}
+              >
+                <div style={{ fontWeight: 600, marginBottom: "4px" }}>{opt.label}</div>
+                <div style={{ fontSize: "12px", opacity: 0.75 }}>{opt.desc}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+
         <SpaceSection
           spaceType={spaceType}
           spaceScale={spaceScale}
@@ -134,6 +163,7 @@ export default function PromptGenerator() {
             wall={wall}
             partition={partition}
             ctIdx={ctIdx}
+            selectedTask={selectedTask}
             onSave={handleSave}
           />
         )}

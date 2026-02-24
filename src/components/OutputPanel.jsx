@@ -1,17 +1,16 @@
 "use client"
 
 import { useState } from "react"
-import { SPACE_TYPE, SPACE_SCALE_BY_TYPE, ACCENT_STYLE, MATERIALS_BY_ACCENT, FURNITURE_BY_TYPE, COLOR_TEMP_STEPS, SYSTEM_DEFAULTS, SYSTEM_DEFAULTS_STYLE_TRANSFER, TASK_OPTIONS } from "@/data/options"
+import { SPACE_TYPE, SPACE_SCALE_BY_TYPE, ACCENT_STYLE, MATERIALS_BY_ACCENT, FURNITURE_BY_TYPE, COLOR_TEMP_STEPS, SYSTEM_DEFAULTS, SYSTEM_DEFAULTS_STYLE_TRANSFER } from "@/data/options"
 import { supabase } from "@/lib/supabase"
 import styles from "./PromptGenerator.module.css"
 
-export default function OutputPanel({ spaceType, spaceScale, furniture, accentStyle, floor, ceiling, wall, partition, ctIdx, onSave }) {
+export default function OutputPanel({ spaceType, spaceScale, furniture, accentStyle, floor, ceiling, wall, partition, ctIdx, selectedTask, onSave }) {
   const [finalPrompt, setFinalPrompt] = useState("")
   const [copied, setCopied]           = useState(false)
   const [loading, setLoading]         = useState(false)
   const [error, setError]             = useState("")
   const [saved, setSaved]             = useState(false)
-  const [selectedTask, setSelectedTask] = useState(TASK_OPTIONS[0].value)
 
   const buildJSON = () => {
     const ct   = COLOR_TEMP_STEPS[ctIdx]
@@ -97,34 +96,6 @@ export default function OutputPanel({ spaceType, spaceScale, furniture, accentSt
 
   return (
     <div>
-      {/* Task 선택 */}
-      <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>⚙️ 작업 방식 선택</h2>
-        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-          {TASK_OPTIONS.map((opt) => (
-            <button
-              key={opt.value}
-              onClick={() => setSelectedTask(opt.value)}
-              style={{
-                flex: 1,
-                minWidth: "160px",
-                padding: "12px 16px",
-                borderRadius: "10px",
-                border: selectedTask === opt.value ? "2px solid #a855f7" : "2px solid #3f3f46",
-                background: selectedTask === opt.value ? "rgba(168,85,247,0.15)" : "rgba(255,255,255,0.03)",
-                color: selectedTask === opt.value ? "#e9d5ff" : "#a1a1aa",
-                cursor: "pointer",
-                textAlign: "left",
-                transition: "all 0.2s",
-              }}
-            >
-              <div style={{ fontWeight: 600, marginBottom: "4px" }}>{opt.label}</div>
-              <div style={{ fontSize: "12px", opacity: 0.75 }}>{opt.desc}</div>
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* JSON 출력 */}
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>📄 JSON 프롬프트</h2>
