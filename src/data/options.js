@@ -1,28 +1,28 @@
 export const SPACE_TYPE = {
-  "🏢 오픈 오피스":        "open_office",
-  "🪑 회의실":             "conference_room",
-  "👔 임원실":             "executive_office",
-  "☕ 라운지 / 휴게 공간": "lounge_area",
-  "🛎️ 리셉션 / 로비":     "reception_lobby",
-  "🚶 복도":               "corridor",
+  "👔 임원실":       "executive_office",
+  "🪑 회의실":       "conference_room",
+  "🏢 업무공간":     "open_office",
+  "☕ 소셜공간":     "lounge_area",
+  "🛎️ 지원공간":    "reception_lobby",
+  "🚶 통로공간":     "corridor",
 }
 
 export const SPACE_SCALE_BY_TYPE = {
-  "🏢 오픈 오피스":        {"소형":"small","중형":"medium","대형":"large"},
-  "🪑 회의실":             {"1~4인":"xs_1to4","4~8인":"s_4to8","8~12인":"m_8to12","12인 이상":"l_12plus"},
-  "👔 임원실":             {"소형":"small","중형":"medium","대형":"large"},
-  "☕ 라운지 / 휴게 공간": {"소형":"small","중형":"medium","대형":"large"},
-  "🛎️ 리셉션 / 로비":     {"소형":"small","중형":"medium","대형":"large"},
-  "🚶 복도":               {"소형":"small","중형":"medium","대형":"large"},
+  "👔 임원실":       {"컴팩트형":"compact","기본형":"standard","확장형":"extended"},
+  "🪑 회의실":       {"4인 이하":"xs_under4","5~9인":"s_5to9","10~16인":"m_10to16","17인 이상":"l_17plus"},
+  "🏢 업무공간":     {"소형":"small","중형":"medium","대형":"large"},
+  "☕ 소셜공간":     {"소형":"small","중형":"medium","대형":"large"},
+  "🛎️ 지원공간":    {"소형":"small","중형":"medium","대형":"large"},
+  "🚶 통로공간":     {"소형":"small","중형":"medium","대형":"large"},
 }
 
 export const FURNITURE_BY_TYPE = {
-  "🏢 오픈 오피스": {"오픈 벤칭 (선형 배열)":"open_office_benching_linear_rows","클러스터형 팀 데스크":"clustered_team_desks_collaborative_zones","핫데스킹 / 플렉시블":"hot_desking_flexible_seating"},
-  "🪑 회의실":      {"직사각형 회의 테이블":"rectangular_conference_table","원형 회의 테이블":"round_conference_table","U자형 배열":"u_shape_arrangement","교실형 배열":"classroom_style_arrangement"},
-  "👔 임원실":      {"임원형 단독 데스크 + 소파 세트":"executive_desk_with_sofa_set","임원형 단독 데스크 + 미팅 테이블":"executive_desk_with_meeting_table","L자형 코너 데스크":"l_shaped_corner_desk"},
-  "☕ 라운지 / 휴게 공간": {"소파 + 로우 테이블 중심":"sofa_and_low_table_centered","바 테이블 + 하이체어 혼합":"bar_table_with_high_chairs_mixed","캐주얼 빈백 + 모듈형 소파":"casual_beanbag_modular_sofa"},
-  "🛎️ 리셉션 / 로비": {"리셉션 카운터 + 대기 소파":"reception_counter_with_waiting_sofa","리셉션 카운터 + 스탠딩 존":"reception_counter_with_standing_zone","미니멀 카운터 단독":"minimal_counter_only"},
-  "🚶 복도":        {"벽면 수납장 + 통로":"wall_storage_with_passage","벤치 + 아트월":"bench_with_art_wall","오픈 통로 (가구 없음)":"open_passage_no_furniture"},
+  "👔 임원실":       {"임원형 단독 데스크 + 소파 세트":"executive_desk_with_sofa_set","임원형 단독 데스크 + 미팅 테이블":"executive_desk_with_meeting_table","L자형 코너 데스크":"l_shaped_corner_desk"},
+  "🪑 회의실":       {"직사각형 회의 테이블":"rectangular_conference_table","원형 회의 테이블":"round_conference_table","U자형 배열":"u_shape_arrangement","교실형 배열":"classroom_style_arrangement"},
+  "🏢 업무공간":     {"오픈 벤칭 (선형 배열)":"open_office_benching_linear_rows","클러스터형 팀 데스크":"clustered_team_desks_collaborative_zones","핫데스킹 / 플렉시블":"hot_desking_flexible_seating"},
+  "☕ 소셜공간":     {"소파 + 로우 테이블 중심":"sofa_and_low_table_centered","바 테이블 + 하이체어 혼합":"bar_table_with_high_chairs_mixed","캐주얼 빈백 + 모듈형 소파":"casual_beanbag_modular_sofa"},
+  "🛎️ 지원공간":    {"리셉션 카운터 + 대기 소파":"reception_counter_with_waiting_sofa","리셉션 카운터 + 스탠딩 존":"reception_counter_with_standing_zone","미니멀 카운터 단독":"minimal_counter_only"},
+  "🚶 통로공간":     {"벽면 수납장 + 통로":"wall_storage_with_passage","벤치 + 아트월":"bench_with_art_wall","오픈 통로 (가구 없음)":"open_passage_no_furniture"},
 }
 
 export const ACCENT_STYLE = {
@@ -88,28 +88,3 @@ export const SYSTEM_DEFAULTS = {
   quality: { render_fidelity:"photoreal", postprocess_style:"minimal" },
   camera: { viewpoint:"eye_level", lens:"wide_24_28mm" },
 }
-
-export const SYSTEM_DEFAULTS_STYLE_TRANSFER = {
-  constraints: { scale_reference:"human_scale", geometry_plausibility:"strict", verticals_straight:true, avoid_concepts:["people","watermark","text_overlay","extreme_fisheye"] },
-  quality: { render_fidelity:"photoreal", postprocess_style:"minimal" },
-  camera: { viewpoint:"eye_level", lens:"wide_24_28mm" },
-  style_transfer: {
-    preserve_structure: true,
-    structure_fidelity: "high",
-    style_override: "full",
-    reference_image_required: true,
-  },
-}
-
-export const TASK_OPTIONS = [
-  {
-    value: "photorealistic_architectural_visualization",
-    label: "🏛️ 건축 시각화",
-    desc: "사실적인 오피스 인테리어 렌더링 생성",
-  },
-  {
-    value: "image-style-transfer",
-    label: "🎨 이미지 스타일 전환",
-    desc: "참고 이미지의 구조를 유지하며 스타일 적용",
-  },
-]
