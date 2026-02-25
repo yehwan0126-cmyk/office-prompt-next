@@ -1,10 +1,59 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import PillButton from "./PillButton"
 import { ACCENT_STYLE, MATERIALS_BY_ACCENT, COLOR_TEMP_STEPS } from "@/data/options"
 import styles from "./PromptGenerator.module.css"
 
-export default function MaterialsSection({ accentStyle, floor, ceiling, wall, partition, ctIdx, onAccentStyle, onFloor, onCeiling, onWall, onPartition, onCtIdx }) {
+const FREE_INPUT_KEY = "✏️ 자유 입력"
+
+function MaterialSelect({ label, value, defaultValue, onChange }) {
+  const isFree = value?.startsWith("__free__")
+  const [freeText, setFreeText] = useState(isFree ? value.replace("__free__", "") : "")
+
+  useEffect(() => {
+    if (!isFree) setFreeText("")
+  }, [value])
+
+  const selectValue = isFree ? FREE_INPUT_KEY : "ACCENT STYLE값에 따름"
+
+  const handleSelect = (e) => {
+    if (e.target.value === FREE_INPUT_KEY) {
+      setFreeText("")
+      onChange("__free__")
+    } else {
+      onChange(defaultValue)
+    }
+  }
+
+  const handleFreeText = (e) => {
+    const v = e.target.value
+    setFreeText(v)
+    onChange(`__free__${v}`)
+  }
+
+  return (
+    <div>
+      <label className={styles.fieldLabel}>{label}</label>
+      <select className={styles.select} value={selectValue} onChange={handleSelect}>
+        <option value="ACCENT STYLE값에 따름">ACCENT STYLE값에 따름</option>
+        <option>{FREE_INPUT_KEY}</option>
+      </select>
+      {isFree && (
+        <input
+          className={styles.select}
+          style={{ marginTop: "8px" }}
+          type="text"
+          placeholder={`${label}을 직접 입력하세요`}
+          value={freeText}
+          onChange={handleFreeText}
+        />
+      )}
+    </div>
+  )
+}
+
+export default function MaterialsSection({ accentStyle, floor, ceiling, wall, ctIdx, onAccentStyle, onFloor, onCeiling, onWall, onCtIdx }) {
   return (
     <div>
       {/* 액센트 스타일 */}
@@ -27,21 +76,24 @@ export default function MaterialsSection({ accentStyle, floor, ceiling, wall, pa
         <div className={styles.section}>
           <h2 className={styles.sectionTitle}>03 · 마감재</h2>
           <div className={styles.grid4}>
-            {[
-              { label: "바닥재", value: floor,     setter: onFloor,     key: "floor"     },
-              { label: "천장",   value: ceiling,   setter: onCeiling,   key: "ceiling"   },
-              { label: "벽",     value: wall,       setter: onWall,      key: "wall"      },
-              { label: "파티션", value: partition,  setter: onPartition, key: "partition" },
-            ].map(({ label, value, setter, key }) => (
-              <div key={key}>
-                <label className={styles.fieldLabel}>{label}</label>
-                <select className={styles.select} value={value} onChange={e => setter(e.target.value)}>
-                  {Object.keys(MATERIALS_BY_ACCENT[accentStyle][key]).map(m => (
-                    <option key={m}>{m}</option>
-                  ))}
-                </select>
-              </div>
-            ))}
+            <MaterialSelect
+              label="바닥재"
+              value={floor}
+              defaultValue={Object.keys(MATERIALS_BY_ACCENT[accentStyle].floor)[0]}
+              onChange={onFloor}
+            />
+            <MaterialSelect
+              label="천장"
+              value={ceiling}
+              defaultValue={Object.keys(MATERIALS_BY_ACCENT[accentStyle].ceiling)[0]}
+              onChange={onCeiling}
+            />
+            <MaterialSelect
+              label="벽"
+              value={wall}
+              defaultValue={Object.keys(MATERIALS_BY_ACCENT[accentStyle].wall)[0]}
+              onChange={onWall}
+            />
           </div>
         </div>
       )}

@@ -5,6 +5,8 @@ export async function POST(request) {
     const systemPrompt = `You are an expert at writing image generation prompts for architectural visualization.
 Convert the given structured data into a single, detailed, natural English prompt for FLUX.2 Pro.
 The prompt should be vivid, specific, and optimized for photorealistic interior rendering.
+If seating_capacity is provided, you MUST reflect the exact number of chairs and seats visible in the scene. This is critical.
+If any material value is "follow_accent_style", infer and describe the most appropriate material for that surface based on the accent_style value. For example, "natural_wood" accent style should produce warm wood-toned materials, "industrial" should produce raw concrete or metal, "premium_luxury" should produce marble or high-end finishes, etc. Describe these materials naturally in the prompt without mentioning "follow_accent_style".
 Return ONLY the prompt text, no explanations or extra text.`
 
     const userMessage = `Create an image generation prompt from this data:

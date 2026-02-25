@@ -5,7 +5,7 @@ import { SPACE_TYPE, SPACE_SCALE_BY_TYPE, ACCENT_STYLE, MATERIALS_BY_ACCENT, FUR
 import { supabase } from "@/lib/supabase"
 import styles from "./PromptGenerator.module.css"
 
-export default function OutputPanel({ spaceType, spaceScale, furniture, accentStyle, floor, ceiling, wall, partition, ctIdx, selectedTask, onSave }) {
+export default function OutputPanel({ spaceType, spaceScale, furniture, accentStyle, floor, ceiling, wall, ctIdx, selectedTask, onSave }) {
   const [finalPrompt, setFinalPrompt] = useState("")
   const [copied, setCopied]           = useState(false)
   const [loading, setLoading]         = useState(false)
@@ -16,29 +16,44 @@ export default function OutputPanel({ spaceType, spaceScale, furniture, accentSt
     const ct   = COLOR_TEMP_STEPS[ctIdx]
     const mats = MATERIALS_BY_ACCENT[accentStyle]
     const isStyleTransfer = selectedTask === "image-style-transfer"
+
+    const resolvemat = (value, matObj) => {
+      if (value?.startsWith("__free__")) return value.replace("__free__", "")
+      if (Object.keys(matObj).includes(value)) return "follow_accent_style"
+      return "follow_accent_style"
+    }
+
+    const furnitureValue = furniture?.startsWith("__free__")
+      ? furniture.replace("__free__", "")
+      : FURNITURE_BY_TYPE[spaceType][spaceScale][furniture]
+
+    const scaleRaw = SPACE_SCALE_BY_TYPE[spaceType][spaceScale]
+    const scaleValue = typeof scaleRaw === "object" ? scaleRaw.scale : scaleRaw
+    const seatingCapacity = typeof scaleRaw === "object" ? scaleRaw.seating_capacity : null
+
     return {
       input: {
         task: selectedTask,
         space: {
           type:  SPACE_TYPE[spaceType],
-          scale: SPACE_SCALE_BY_TYPE[spaceType][spaceScale],
+          scale: scaleValue,
+          ...(seatingCapacity && { seating_capacity: seatingCapacity }),
         },
         style: {
           base_style:   "modern_commercial_office",
           accent_style: ACCENT_STYLE[accentStyle],
         },
         materials: {
-          floor:     mats.floor[floor],
-          ceiling:   mats.ceiling[ceiling],
-          wall:      mats.wall[wall],
-          partition: mats.partition[partition],
+          floor:   resolvemat(floor,   mats.floor),
+          ceiling: resolvemat(ceiling, mats.ceiling),
+          wall:    resolvemat(wall,    mats.wall),
         },
         lighting: {
           color_temperature_range: ct.range,
           color_temperature_k:     ct.k,
           description:             ct.json,
         },
-        furniture_configuration: FURNITURE_BY_TYPE[spaceType][furniture],
+        furniture_configuration: furnitureValue,
       },
       system_defaults: isStyleTransfer ? SYSTEM_DEFAULTS_STYLE_TRANSFER : SYSTEM_DEFAULTS,
     }
@@ -67,7 +82,7 @@ export default function OutputPanel({ spaceType, spaceScale, furniture, accentSt
       const { data: saved, error: saveError } = await supabase
         .from("prompt_history")
         .insert([{
-          options: { spaceType, spaceScale, furniture, accentStyle, floor, ceiling, wall, partition, ctIdx },
+          options: { spaceType, spaceScale, furniture, accentStyle, floor, ceiling, wall, ctIdx },
           prompt_en: data.prompt,
         }])
         .select()

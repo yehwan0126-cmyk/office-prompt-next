@@ -18,7 +18,6 @@ export default function PromptGenerator() {
   const [floor,       setFloor]       = useState("")
   const [ceiling,     setCeiling]     = useState("")
   const [wall,        setWall]        = useState("")
-  const [partition,   setPartition]   = useState("")
   const [ctIdx,       setCtIdx]       = useState(3)
 
   const [history,     setHistory]     = useState([])
@@ -40,10 +39,12 @@ export default function PromptGenerator() {
 
   const handleSpaceType = (label) => {
     setSpaceType(label)
-    setSpaceScale(Object.keys(SPACE_SCALE_BY_TYPE[label])[0])
-    setFurniture(Object.keys(FURNITURE_BY_TYPE[label])[0])
+    const firstScale = Object.keys(SPACE_SCALE_BY_TYPE[label])[0]
+    setSpaceScale(firstScale)
+    const firstFurniture = Object.keys(FURNITURE_BY_TYPE[label][firstScale])[0]
+    setFurniture(firstFurniture)
     setAccentStyle(null)
-    setFloor(""); setCeiling(""); setWall(""); setPartition("")
+    setFloor(""); setCeiling(""); setWall("")
   }
 
   const handleAccentStyle = (label) => {
@@ -52,7 +53,6 @@ export default function PromptGenerator() {
     setFloor(Object.keys(mats.floor)[0])
     setCeiling(Object.keys(mats.ceiling)[0])
     setWall(Object.keys(mats.wall)[0])
-    setPartition(Object.keys(mats.partition)[0])
   }
 
   // OutputPanel에서 저장 완료 시 히스토리 목록에 추가
@@ -70,7 +70,6 @@ export default function PromptGenerator() {
     setFloor(o.floor)
     setCeiling(o.ceiling)
     setWall(o.wall)
-    setPartition(o.partition)
     setCtIdx(o.ctIdx)
   }
 
@@ -83,7 +82,7 @@ export default function PromptGenerator() {
     if (!error) setHistory(prev => prev.filter(item => item.id !== id))
   }
 
-  const allReady = spaceType && accentStyle && floor && ceiling && wall && partition
+  const allReady = spaceType && accentStyle && floor && ceiling && wall
 
   return (
     <div className={styles.pageLayout}>
@@ -141,13 +140,11 @@ export default function PromptGenerator() {
             floor={floor}
             ceiling={ceiling}
             wall={wall}
-            partition={partition}
             ctIdx={ctIdx}
             onAccentStyle={handleAccentStyle}
             onFloor={setFloor}
             onCeiling={setCeiling}
             onWall={setWall}
-            onPartition={setPartition}
             onCtIdx={setCtIdx}
           />
         )}
@@ -161,7 +158,6 @@ export default function PromptGenerator() {
             floor={floor}
             ceiling={ceiling}
             wall={wall}
-            partition={partition}
             ctIdx={ctIdx}
             selectedTask={selectedTask}
             onSave={handleSave}
