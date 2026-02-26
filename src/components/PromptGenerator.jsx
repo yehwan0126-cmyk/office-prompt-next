@@ -19,6 +19,8 @@ export default function PromptGenerator() {
   const [ceiling,     setCeiling]     = useState("")
   const [wall,        setWall]        = useState("")
   const [ctIdx,       setCtIdx]       = useState(3)
+  const [lightingType, setLightingType] = useState("")
+  const [additionalElements, setAdditionalElements] = useState("")
 
   const [history,     setHistory]     = useState([])
   const [histLoading, setHistLoading] = useState(true)
@@ -45,6 +47,8 @@ export default function PromptGenerator() {
     setFurniture(firstFurniture)
     setAccentStyle(null)
     setFloor(""); setCeiling(""); setWall("")
+    setLightingType("")
+    setAdditionalElements("")
   }
 
   const handleAccentStyle = (label) => {
@@ -82,7 +86,8 @@ export default function PromptGenerator() {
     if (!error) setHistory(prev => prev.filter(item => item.id !== id))
   }
 
-  const allReady = spaceType && accentStyle && floor && ceiling && wall
+  const isTask3 = selectedTask === "structure-style-composite"
+  const allReady = isTask3 || (spaceType && accentStyle && floor && ceiling && wall)
 
   return (
     <div className={styles.pageLayout}>
@@ -95,7 +100,7 @@ export default function PromptGenerator() {
 
       <div className={styles.container}>
         <h1 className={styles.title}>🏢 Office Interior Prompt Generator</h1>
-        <p className={styles.subtitle}>FLUX.1 Pro 모델용 오피스 인테리어 이미지 생성 프롬프트 생성기</p>
+        <p className={styles.subtitle}>FLUX.2 Pro 모델용 오피스 인테리어 이미지 생성 프롬프트 생성기</p>
 
         {/* Task 선택 */}
         <div className={styles.section}>
@@ -112,7 +117,7 @@ export default function PromptGenerator() {
                   borderRadius: "10px",
                   border: selectedTask === opt.value ? "2px solid #a855f7" : "2px solid #3f3f46",
                   background: selectedTask === opt.value ? "rgba(168,85,247,0.15)" : "rgba(255,255,255,0.03)",
-                  color: selectedTask === opt.value ? "#e9d5ff" : "#a1a1aa",
+                  color: selectedTask === opt.value ? "#000000" : "#a1a1aa",
                   cursor: "pointer",
                   textAlign: "left",
                   transition: "all 0.2s",
@@ -125,28 +130,36 @@ export default function PromptGenerator() {
           </div>
         </div>
 
-        <SpaceSection
-          spaceType={spaceType}
-          spaceScale={spaceScale}
-          furniture={furniture}
-          onSpaceType={handleSpaceType}
-          onSpaceScale={setSpaceScale}
-          onFurniture={setFurniture}
-        />
+        {!isTask3 && (
+          <>
+            <SpaceSection
+              spaceType={spaceType}
+              spaceScale={spaceScale}
+              furniture={furniture}
+              additionalElements={additionalElements}
+              onSpaceType={handleSpaceType}
+              onSpaceScale={setSpaceScale}
+              onFurniture={setFurniture}
+              onAdditionalElements={setAdditionalElements}
+            />
 
-        {spaceType && (
-          <MaterialsSection
-            accentStyle={accentStyle}
-            floor={floor}
-            ceiling={ceiling}
-            wall={wall}
-            ctIdx={ctIdx}
-            onAccentStyle={handleAccentStyle}
-            onFloor={setFloor}
-            onCeiling={setCeiling}
-            onWall={setWall}
-            onCtIdx={setCtIdx}
-          />
+            {spaceType && (
+              <MaterialsSection
+                accentStyle={accentStyle}
+                floor={floor}
+                ceiling={ceiling}
+                wall={wall}
+                ctIdx={ctIdx}
+                lightingType={lightingType}
+                onAccentStyle={handleAccentStyle}
+                onFloor={setFloor}
+                onCeiling={setCeiling}
+                onWall={setWall}
+                onCtIdx={setCtIdx}
+                onLightingType={setLightingType}
+              />
+            )}
+          </>
         )}
 
         {allReady && (
@@ -159,6 +172,8 @@ export default function PromptGenerator() {
             ceiling={ceiling}
             wall={wall}
             ctIdx={ctIdx}
+            lightingType={lightingType}
+            additionalElements={additionalElements}
             selectedTask={selectedTask}
             onSave={handleSave}
           />

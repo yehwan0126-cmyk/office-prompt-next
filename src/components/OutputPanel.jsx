@@ -1,11 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import { SPACE_TYPE, SPACE_SCALE_BY_TYPE, ACCENT_STYLE, MATERIALS_BY_ACCENT, FURNITURE_BY_TYPE, COLOR_TEMP_STEPS, SYSTEM_DEFAULTS, SYSTEM_DEFAULTS_STYLE_TRANSFER } from "@/data/options"
+import { SPACE_TYPE, SPACE_SCALE_BY_TYPE, ACCENT_STYLE, MATERIALS_BY_ACCENT, FURNITURE_BY_TYPE, COLOR_TEMP_STEPS, SYSTEM_DEFAULTS, SYSTEM_DEFAULTS_STYLE_TRANSFER, PROMPT_STRUCTURE_STYLE_COMPOSITE } from "@/data/options"
 import { supabase } from "@/lib/supabase"
 import styles from "./PromptGenerator.module.css"
 
-export default function OutputPanel({ spaceType, spaceScale, furniture, accentStyle, floor, ceiling, wall, ctIdx, selectedTask, onSave }) {
+export default function OutputPanel({ spaceType, spaceScale, furniture, accentStyle, floor, ceiling, wall, ctIdx, lightingType, additionalElements, selectedTask, onSave }) {
   const [finalPrompt, setFinalPrompt] = useState("")
   const [copied, setCopied]           = useState(false)
   const [loading, setLoading]         = useState(false)
@@ -49,11 +49,12 @@ export default function OutputPanel({ spaceType, spaceScale, furniture, accentSt
           wall:    resolvemat(wall,    mats.wall),
         },
         lighting: {
-          color_temperature_range: ct.range,
-          color_temperature_k:     ct.k,
-          description:             ct.json,
+          color_temperature: `${ct.k}K`,
+          description:       ct.json,
+          ...(lightingType?.trim() && { lighting_type: lightingType.trim() }),
         },
         furniture_configuration: furnitureValue,
+        ...(additionalElements?.trim() && { additional_elements: additionalElements.trim() }),
       },
       system_defaults: isStyleTransfer ? SYSTEM_DEFAULTS_STYLE_TRANSFER : SYSTEM_DEFAULTS,
     }
@@ -104,6 +105,29 @@ export default function OutputPanel({ spaceType, spaceScale, furniture, accentSt
     navigator.clipboard.writeText(text)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
+  }
+
+  const isTask3 = selectedTask === "structure-style-composite"
+
+  // task3: 표준 프롬프트 바로 표시
+  if (isTask3) {
+    return (
+      <div>
+        <div className={styles.section}>
+          <h2 className={styles.sectionTitle}>🖼️ 구조+스타일 합성 프롬프트</h2>
+          <p style={{ fontSize: "13px", color: "#a1a1aa", marginBottom: "12px" }}>
+            아래 프롬프트와 함께 <strong style={{ color: "#e9d5ff" }}>image 1 (구조)</strong>, <strong style={{ color: "#e9d5ff" }}>image 2 (스타일)</strong> 를 FLUX.2에 입력하세요.
+          </p>
+          <pre className={styles.pre}>{PROMPT_STRUCTURE_STYLE_COMPOSITE}</pre>
+          <button
+            className={`${styles.btnCopy} ${copied ? styles.btnCopied : ""}`}
+            onClick={() => handleCopy(PROMPT_STRUCTURE_STYLE_COMPOSITE)}
+          >
+            {copied ? "✅ 복사 완료!" : "프롬프트 복사"}
+          </button>
+        </div>
+      </div>
+    )
   }
 
   const json    = buildJSON()

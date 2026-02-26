@@ -53,7 +53,7 @@ function MaterialSelect({ label, value, defaultValue, onChange }) {
   )
 }
 
-export default function MaterialsSection({ accentStyle, floor, ceiling, wall, ctIdx, onAccentStyle, onFloor, onCeiling, onWall, onCtIdx }) {
+export default function MaterialsSection({ accentStyle, floor, ceiling, wall, ctIdx, lightingType, onAccentStyle, onFloor, onCeiling, onWall, onCtIdx, onLightingType }) {
   return (
     <div>
       {/* 액센트 스타일 */}
@@ -101,7 +101,8 @@ export default function MaterialsSection({ accentStyle, floor, ceiling, wall, ct
       {/* 조명 */}
       {accentStyle && (
         <div className={styles.section}>
-          <h2 className={styles.sectionTitle}>04 · 조명 색온도</h2>
+          <h2 className={styles.sectionTitle}>04 · 조명</h2>
+          <label className={styles.fieldLabel}>색온도</label>
           <input
             type="range"
             min={0} max={6} step={1}
@@ -112,6 +113,16 @@ export default function MaterialsSection({ accentStyle, floor, ceiling, wall, ct
           <p className={styles.sliderDesc}>
             {COLOR_TEMP_STEPS[ctIdx].range} &nbsp;|&nbsp; {COLOR_TEMP_STEPS[ctIdx].desc}
           </p>
+          <div style={{ marginTop: "16px" }}>
+            <label className={styles.fieldLabel}>조명 형태 (선택)</label>
+            <input
+              className={styles.select}
+              type="text"
+              placeholder="예) 펜던트 조명, 간접 조명, 스탠드 조명"
+              value={lightingType}
+              onChange={e => onLightingType(e.target.value)}
+            />
+          </div>
         </div>
       )}
     </div>

@@ -93,23 +93,23 @@ export const MATERIALS_BY_ACCENT = {
 }
 
 export const COLOR_TEMP_STEPS = [
-  {range:"2700~3000K", desc:"웜화이트 — 따뜻하고 아늑한 분위기",         k:2700, json:"warm_white_lighting_2700K_cozy_ambiance"},
-  {range:"3000~3500K", desc:"웜뉴트럴 — 부드럽고 자연스러운 톤",         k:3200, json:"warm_neutral_lighting_3200K_soft_tone"},
-  {range:"3500~4000K", desc:"소프트화이트 — 편안한 업무 환경",           k:3700, json:"soft_white_lighting_3700K_comfortable"},
-  {range:"4000~4500K", desc:"자연광 — 맑고 균형 잡힌 빛 (오피스 표준)", k:4000, json:"natural_daylight_lighting_4000K_balanced"},
-  {range:"4500~5000K", desc:"쿨뉴트럴 — 선명하고 집중되는 분위기",       k:4700, json:"cool_neutral_lighting_4700K_crisp"},
-  {range:"5000~5500K", desc:"쿨화이트 — 밝고 활기찬 환경",               k:5200, json:"cool_white_lighting_5200K_bright"},
-  {range:"5500~6500K", desc:"데이라이트 — 청량하고 또렷한 조명",         k:6000, json:"daylight_lighting_6000K_crisp_clear"},
+  {range:"2700~3000K", desc:"웜화이트 — 따뜻하고 아늑한 분위기",         k:2700, json:"warm_white_cozy_ambiance"},
+  {range:"3000~3500K", desc:"웜뉴트럴 — 부드럽고 자연스러운 톤",         k:3200, json:"warm_neutral_soft_tone"},
+  {range:"3500~4000K", desc:"소프트화이트 — 편안한 업무 환경",           k:3700, json:"soft_white_comfortable"},
+  {range:"4000~4500K", desc:"자연광 — 맑고 균형 잡힌 빛 (오피스 표준)", k:4000, json:"natural_daylight_balanced"},
+  {range:"4500~5000K", desc:"쿨뉴트럴 — 선명하고 집중되는 분위기",       k:4700, json:"cool_neutral_crisp"},
+  {range:"5000~5500K", desc:"쿨화이트 — 밝고 활기찬 환경",               k:5200, json:"cool_white_bright"},
+  {range:"5500~6500K", desc:"데이라이트 — 청량하고 또렷한 조명",         k:6000, json:"daylight_crisp_clear"},
 ]
 
 export const SYSTEM_DEFAULTS = {
-  constraints: { scale_reference:"human_scale", geometry_plausibility:"strict", verticals_straight:true, avoid_concepts:["people","watermark","text_overlay","extreme_fisheye"] },
+  constraints: { scale_reference:"human_scale", geometry_plausibility:"strict", verticals_straight:true, avoid_concepts:["watermark","text_overlay","extreme_fisheye"] },
   quality: { render_fidelity:"photoreal", postprocess_style:"minimal" },
   camera: { viewpoint:"eye_level", lens:"wide_24_28mm" },
 }
 
 export const SYSTEM_DEFAULTS_STYLE_TRANSFER = {
-  constraints: { scale_reference:"human_scale", geometry_plausibility:"strict", verticals_straight:true, avoid_concepts:["people","watermark","text_overlay","extreme_fisheye"] },
+  constraints: { scale_reference:"human_scale", geometry_plausibility:"strict", verticals_straight:true, avoid_concepts:["watermark","text_overlay","extreme_fisheye"] },
   quality: { render_fidelity:"photoreal", postprocess_style:"minimal" },
   camera: { viewpoint:"eye_level", lens:"wide_24_28mm" },
   style_transfer: {
@@ -131,4 +131,16 @@ export const TASK_OPTIONS = [
     label: "🎨 이미지 스타일 전환",
     desc: "참고 이미지의 구조를 유지하며 스타일 적용",
   },
+  {
+    value: "structure-style-composite",
+    label: "🖼️ 구조+스타일 합성",
+    desc: "image1 구조 유지 + image2 스타일 적용",
+  },
 ]
+
+export const PROMPT_STRUCTURE_STYLE_COMPOSITE =
+`Architectural interior photorealistic visualization.
+Preserve the exact spatial layout, room geometry, furniture placement, and structural composition from image 1.
+Apply the color palette, material textures, surface finishes, and overall visual atmosphere from image 2 onto the structure of image 1.
+Maintain human scale, straight verticals, wide-angle lens 24-28mm, eye-level viewpoint.
+Empty space with clean surfaces, photorealistic render quality.`

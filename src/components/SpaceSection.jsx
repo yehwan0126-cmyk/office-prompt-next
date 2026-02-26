@@ -7,7 +7,7 @@ import styles from "./PromptGenerator.module.css"
 
 const FREE_INPUT_KEY = "✏️ 자유 입력"
 
-export default function SpaceSection({ spaceType, spaceScale, furniture, onSpaceType, onSpaceScale, onFurniture }) {
+export default function SpaceSection({ spaceType, spaceScale, furniture, additionalElements, onSpaceType, onSpaceScale, onFurniture, onAdditionalElements }) {
   const [freeText, setFreeText] = useState("")
 
   const isFreeInput = furniture?.startsWith("__free__")
@@ -84,6 +84,19 @@ export default function SpaceSection({ spaceType, spaceScale, furniture, onSpace
               />
             )}
           </div>
+        </div>
+      )}
+
+      {spaceType && (
+        <div style={{ marginTop: "16px" }}>
+          <label className={styles.fieldLabel}>추가 요소 (선택)</label>
+          <input
+            className={styles.select}
+            type="text"
+            placeholder="예) 실내 조경, 데스크탑, 일하는 사람"
+            value={additionalElements}
+            onChange={e => onAdditionalElements(e.target.value)}
+          />
         </div>
       )}
     </div>
