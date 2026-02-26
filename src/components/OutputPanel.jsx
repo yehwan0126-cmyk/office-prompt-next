@@ -28,15 +28,19 @@ export default function OutputPanel({ spaceType, spaceScale, furniture, accentSt
       : FURNITURE_BY_TYPE[spaceType][spaceScale][furniture]
 
     const scaleRaw = SPACE_SCALE_BY_TYPE[spaceType][spaceScale]
-    const scaleValue = typeof scaleRaw === "object" ? scaleRaw.scale : scaleRaw
-    const seatingCapacity = typeof scaleRaw === "object" ? scaleRaw.seating_capacity : null
+    const scaleValue       = scaleRaw.scale
+    const seatingCapacity  = scaleRaw.seating_capacity ?? null
+    const ceilingHeight    = scaleRaw.ceiling_height
+    const depthFeel        = scaleRaw.depth_feel
 
     return {
       input: {
         task: selectedTask,
         space: {
-          type:  SPACE_TYPE[spaceType],
-          scale: scaleValue,
+          type:           SPACE_TYPE[spaceType],
+          scale:          scaleValue,
+          ceiling_height: ceilingHeight,
+          depth_feel:     depthFeel,
           ...(seatingCapacity && { seating_capacity: seatingCapacity }),
         },
         style: {

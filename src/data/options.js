@@ -8,18 +8,43 @@ export const SPACE_TYPE = {
 }
 
 export const SPACE_SCALE_BY_TYPE = {
-  "👔 임원실":       {"컴팩트형":"compact","기본형":"standard","확장형":"extended"},
-  "🪑 회의실":       {"4인 이하":{scale:"xs_under4",seating_capacity:4},"5~9인":{scale:"s_5to9",seating_capacity:8},"10~16인":{scale:"m_10to16",seating_capacity:14},"17인 이상":{scale:"l_17plus",seating_capacity:20}},
-  "🏢 업무공간":     {"소형":"small","중형":"medium","대형":"large"},
-  "☕ 소셜공간":     {"소형":"small","중형":"medium","대형":"large"},
-  "🛎️ 지원공간":    {"소형":"small","중형":"medium","대형":"large"},
-  "🚶 통로공간":     {"소형":"small","중형":"medium","대형":"large"},
+  "👔 임원실": {
+    "컴팩트형": { scale:"compact",  ceiling_height:"2.7m", depth_feel:"compact depth" },
+    "기본형":   { scale:"standard", ceiling_height:"2.7m", depth_feel:"moderate depth" },
+    "확장형":   { scale:"extended", ceiling_height:"2.7m", depth_feel:"long sightlines" },
+  },
+  "🪑 회의실": {
+    "4인 이하":  { scale:"xs_under4", seating_capacity:4,  ceiling_height:"2.7m", depth_feel:"compact depth" },
+    "5~9인":    { scale:"s_5to9",    seating_capacity:8,  ceiling_height:"2.7m", depth_feel:"moderate depth" },
+    "10~16인":  { scale:"m_10to16",  seating_capacity:14, ceiling_height:"2.7m", depth_feel:"moderate depth" },
+    "17인 이상": { scale:"l_17plus",  seating_capacity:20, ceiling_height:"2.7m", depth_feel:"long sightlines" },
+  },
+  "🏢 업무공간": {
+    "소형": { scale:"small",  ceiling_height:"2.7m", depth_feel:"compact depth" },
+    "중형": { scale:"medium", ceiling_height:"2.7m", depth_feel:"moderate depth" },
+    "대형": { scale:"large",  ceiling_height:"2.7m", depth_feel:"long sightlines" },
+  },
+  "☕ 소셜공간": {
+    "소형": { scale:"small",  ceiling_height:"3.0m", depth_feel:"compact depth" },
+    "중형": { scale:"medium", ceiling_height:"3.0m", depth_feel:"moderate depth" },
+    "대형": { scale:"large",  ceiling_height:"3.0m", depth_feel:"long sightlines" },
+  },
+  "🛎️ 지원공간": {
+    "소형": { scale:"small",  ceiling_height:"3.0m", depth_feel:"compact depth" },
+    "중형": { scale:"medium", ceiling_height:"3.0m", depth_feel:"moderate depth" },
+    "대형": { scale:"large",  ceiling_height:"3.0m", depth_feel:"long sightlines" },
+  },
+  "🚶 통로공간": {
+    "소형": { scale:"small",  ceiling_height:"3.0m", depth_feel:"compact depth" },
+    "중형": { scale:"medium", ceiling_height:"3.0m", depth_feel:"moderate depth" },
+    "대형": { scale:"large",  ceiling_height:"3.0m", depth_feel:"long sightlines" },
+  },
 }
 
 export const FURNITURE_BY_TYPE = {
   "👔 임원실": {
-    "컴팩트형": { "임원형 데스크 + 체어 + 4인 원형테이블":        "executive_desk_chair_4p_round_table" },
-    "기본형":   { "임원형 데스크 + 체어 + 6인 사각 회의테이블":   "executive_desk_chair_6p_rect_table" },
+    "컴팩트형": { "임원형 데스크 + 체어 + 4인 원형테이블":          "executive_desk_chair_4p_round_table" },
+    "기본형":   { "임원형 데스크 + 체어 + 6인 사각 회의테이블":     "executive_desk_chair_6p_rect_table" },
     "확장형":   { "임원형 L형 데스크 + 체어 + 8인 사각 회의테이블": "executive_ldesk_chair_8p_rect_table" },
   },
   "🪑 회의실": {
@@ -29,24 +54,96 @@ export const FURNITURE_BY_TYPE = {
     "17인 이상": { "컨퍼런스용 회의 테이블 + 회의용 의자 + TV": "conference_table_with_meeting_chairs_and_tv" },
   },
   "🏢 업무공간": {
-    "소형": { "오픈 벤칭 (선형 배열)": "open_office_benching_linear_rows" },
-    "중형": { "오픈 벤칭 (선형 배열)": "open_office_benching_linear_rows" },
-    "대형": { "오픈 벤칭 (선형 배열)": "open_office_benching_linear_rows" },
+    "소형": {
+      "일렬 배치 (벤칭)":          "open_office_benching_linear_rows",
+      "독립 데스크 배치":           "independent_desk_grid_layout",
+      "4인 그룹 배치":              "cluster_4p_group_layout",
+      "업무 + 전화부스 혼합":       "benching_with_phone_booth",
+      "업무 + 협업존 혼합":         "benching_with_collaboration_zone",
+      "업무 + 협업 + 집중존 혼합":  "benching_with_collaboration_and_focus_zone",
+    },
+    "중형": {
+      "일렬 배치 (벤칭)":          "open_office_benching_linear_rows",
+      "독립 데스크 배치":           "independent_desk_grid_layout",
+      "4인 그룹 배치":              "cluster_4p_group_layout",
+      "업무 + 전화부스 혼합":       "benching_with_phone_booth",
+      "업무 + 협업존 혼합":         "benching_with_collaboration_zone",
+      "업무 + 협업 + 집중존 혼합":  "benching_with_collaboration_and_focus_zone",
+    },
+    "대형": {
+      "일렬 배치 (벤칭)":          "open_office_benching_linear_rows",
+      "독립 데스크 배치":           "independent_desk_grid_layout",
+      "4인 그룹 배치":              "cluster_4p_group_layout",
+      "업무 + 전화부스 혼합":       "benching_with_phone_booth",
+      "업무 + 협업존 혼합":         "benching_with_collaboration_zone",
+      "업무 + 협업 + 집중존 혼합":  "benching_with_collaboration_and_focus_zone",
+    },
   },
   "☕ 소셜공간": {
-    "소형": { "소파 + 로우 테이블 중심": "sofa_and_low_table_centered" },
-    "중형": { "소파 + 로우 테이블 중심": "sofa_and_low_table_centered" },
-    "대형": { "소파 + 로우 테이블 중심": "sofa_and_low_table_centered" },
+    "소형": {
+      "소파 + 낮은 테이블 중심":    "sofa_and_low_table_centered",
+      "바 테이블 + 높은 의자":      "bar_table_with_high_chairs",
+      "1인 라운지 체어 배치":       "single_lounge_chair_layout",
+      "소파 + 바 테이블 혼합":      "sofa_and_bar_table_mixed",
+      "카페 스타일 (4인 테이블 다수)": "cafe_style_multiple_4p_tables",
+    },
+    "중형": {
+      "소파 + 낮은 테이블 중심":    "sofa_and_low_table_centered",
+      "바 테이블 + 높은 의자":      "bar_table_with_high_chairs",
+      "1인 라운지 체어 배치":       "single_lounge_chair_layout",
+      "소파 + 바 테이블 혼합":      "sofa_and_bar_table_mixed",
+      "카페 스타일 (4인 테이블 다수)": "cafe_style_multiple_4p_tables",
+    },
+    "대형": {
+      "소파 + 낮은 테이블 중심":    "sofa_and_low_table_centered",
+      "바 테이블 + 높은 의자":      "bar_table_with_high_chairs",
+      "1인 라운지 체어 배치":       "single_lounge_chair_layout",
+      "소파 + 바 테이블 혼합":      "sofa_and_bar_table_mixed",
+      "카페 스타일 (4인 테이블 다수)": "cafe_style_multiple_4p_tables",
+    },
   },
   "🛎️ 지원공간": {
-    "소형": { "리셉션 카운터 + 대기 소파": "reception_counter_with_waiting_sofa" },
-    "중형": { "리셉션 카운터 + 대기 소파": "reception_counter_with_waiting_sofa" },
-    "대형": { "리셉션 카운터 + 대기 소파": "reception_counter_with_waiting_sofa" },
+    "소형": {
+      "리셉션 — 카운터 + 대기 소파": "reception_counter_with_waiting_sofa",
+      "라커룸 — 라커 + 벤치":        "locker_room_with_bench",
+      "휴식공간 — 소파 + 낮은 테이블": "break_room_sofa_low_table",
+      "팬트리 — 주방 카운터 + 바 테이블": "pantry_kitchen_counter_bar_table",
+    },
+    "중형": {
+      "리셉션 — 카운터 + 대기 소파": "reception_counter_with_waiting_sofa",
+      "라커룸 — 라커 + 벤치":        "locker_room_with_bench",
+      "휴식공간 — 소파 + 낮은 테이블": "break_room_sofa_low_table",
+      "팬트리 — 주방 카운터 + 바 테이블": "pantry_kitchen_counter_bar_table",
+    },
+    "대형": {
+      "리셉션 — 카운터 + 대기 소파": "reception_counter_with_waiting_sofa",
+      "라커룸 — 라커 + 벤치":        "locker_room_with_bench",
+      "휴식공간 — 소파 + 낮은 테이블": "break_room_sofa_low_table",
+      "팬트리 — 주방 카운터 + 바 테이블": "pantry_kitchen_counter_bar_table",
+    },
   },
   "🚶 통로공간": {
-    "소형": { "벽면 수납장 + 통로": "wall_storage_with_passage" },
-    "중형": { "벽면 수납장 + 통로": "wall_storage_with_passage" },
-    "대형": { "벽면 수납장 + 통로": "wall_storage_with_passage" },
+    "소형": {
+      "벽면 수납장 + 통로":       "wall_storage_with_passage",
+      "아트월 + 통로":            "art_wall_with_passage",
+      "유리 파티션 + 통로":       "glass_partition_with_passage",
+      "간접조명 벽면 + 통로":     "indirect_lighting_wall_with_passage",
+      "소파 부스 + 통로":         "sofa_booth_with_passage",
+    },
+    "중형": {
+      "벽면 수납장 + 통로":       "wall_storage_with_passage",
+      "아트월 + 통로":            "art_wall_with_passage",
+      "유리 파티션 + 통로":       "glass_partition_with_passage",
+      "간접조명 벽면 + 통로":     "indirect_lighting_wall_with_passage",
+      "소파 부스 + 통로":         "sofa_booth_with_passage",
+    },
+    "대형": {
+      "벽면 수납장 + 통로":       "wall_storage_with_passage",
+      "아트월 + 통로":            "art_wall_with_passage",
+      "유리 파티션 + 통로":       "glass_partition_with_passage",
+      "간접조명 벽면 + 통로":     "indirect_lighting_wall_with_passage",
+      "소파 부스 + 통로":         "sofa_booth_with_passage",
+    },
   },
 }
 
